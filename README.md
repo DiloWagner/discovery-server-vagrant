@@ -7,9 +7,8 @@ Exemplo criado com base no projeto [cptserver](https://github.com/pigeontech/cpt
 
 #### Créditos para
 ------------
-[pigeontech](https://github.com/pigeontech)
-
-[tutorial](https://www.youtube.com/watch?v=TEAZnpM8RuA)
+* [pigeontech](https://github.com/pigeontech)
+* [tutorial de instalação do autor](https://www.youtube.com/watch?v=TEAZnpM8RuA)
 
 #### Requisitos
 ------------
