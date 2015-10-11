@@ -61,6 +61,7 @@ Vagrant.configure("2") do |config|
 	config.vagrant.host = :detect
 	config.ssh.shell = $vconfig['vagrant']['ssh_shell']
 	config.ssh.username = $vconfig['vagrant']['ssh_username']
+	config.ssh.guest_port = $vconfig['vagrant']['ssh_port']
 	config.ssh.keep_alive = true
 
 	####################################
@@ -73,6 +74,7 @@ Vagrant.configure("2") do |config|
 	config.vm.network "forwarded_port", guest: 80, host: $vconfig['vagrant']['box_port']
 	config.vm.network "forwarded_port", guest: 3306, host: $vconfig['mysql']['port']
 	config.vm.network "forwarded_port", guest: 443, host: $vconfig['vagrant']['box_port_ssl']
+	config.vm.network :forwarded_port, guest: 22, host: $vconfig['vagrant']['ssh_port'], id: "ssh"
 	config.vm.synced_folder $vconfig['vagrant']['vm_webroot'], $vconfig['vagrant']['vm_docroot'], :nfs => true
 	#config.vm.synced_folder $vconfig['vagrant']['vm_webroot'], $vconfig['vagrant']['vm_docroot'], :owner => "vagrant", :group => "www-data", :mount_options => ["dmode=777","fmode=777"]
   

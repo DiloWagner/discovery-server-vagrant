@@ -4,19 +4,20 @@
 ### Only change these if you are experienced with VMs or are instructed to do so.
 ####################################
 vagrant:
-  box: DiscoveryServer
-  box_url: https://atlas.hashicorp.com/ubuntu/boxes/trusty32/versions/14.04/providers/virtualbox.box
-  box_port: 80
+  box: DiscoveryServer-01
+  box_url: https://github.com/kraksoft/vagrant-box-ubuntu/releases/download/15.04/ubuntu-15.04-amd64.box
+  box_port: 8080
   box_port_ssl: 443
-  box_ip: 10.1.1.100
+  box_ip: 192.168.1.100
   ssh_shell: bash -c 'BASH_ENV=/etc/profile exec bash'
   ssh_username: vagrant
-  vm_name: discoveryserver
+  ssh_port: 22222
+  vm_name: discoveryserver-01
   vm_memory: 1024
-  vm_cpu: 80
+  vm_cpu: 1
   vm_webroot: /var/www
   vm_docroot: /var/www
-  vm_hostname: dev.56
+  vm_hostname: dev
 
 ####################################
 ### Ubuntu Linux
@@ -87,7 +88,7 @@ phpmodules:
 ### For username "root". You have only one chance to change the root password. Do it before typing "vagrant up" for the first time.
 ####################################
 mysql:
-  port: 3306
+  port: 6000
   password: vagrant
 
 ####################################
