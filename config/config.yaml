@@ -4,14 +4,14 @@
 ### Only change these if you are experienced with VMs or are instructed to do so.
 ####################################
 vagrant:
-  box: DotServer/Ubuntu/PHP-5.6
+  box: DiscoveryServer
   box_url: https://atlas.hashicorp.com/ubuntu/boxes/trusty32/versions/14.04/providers/virtualbox.box
   box_port: 80
   box_port_ssl: 443
-  box_ip: 10.0.0.123
+  box_ip: 10.1.1.100
   ssh_shell: bash -c 'BASH_ENV=/etc/profile exec bash'
   ssh_username: vagrant
-  vm_name: dotserver-php-5.6
+  vm_name: discoveryserver
   vm_memory: 1024
   vm_cpu: 80
   vm_webroot: /var/www
@@ -51,8 +51,8 @@ email:
   mailhub: smtp.gmail.com:587
   hostname: localhost
   rewriteDomain: gmail.com
-  root: diego.wagner@dotgroup.com
-  AuthUser: diego.wagner@dotgroup.com
+  root: fake@fake.com
+  AuthUser: fake@fake.com
   AuthPass: hunter2
   UseSTARTTLS: 'YES'
   UseTLS: 'YES'
@@ -78,6 +78,7 @@ phpmodules:
   - php5-xmlrpc
   - php5-xdebug
   - php5-intl
+  - php5-xdebug
   - libapache2-mod-php5
 
 ####################################
@@ -167,16 +168,7 @@ directory:
 ####################################
 vhosts:
   -
-    ServerName: dev.56
-    ServerAlias: localhost.dev.56 www.localhost.dev.56 default.dev.56 www.default.dev.56
-    DocumentRoot: /var/www/default
-    ServerAdmin: webmaster@localhost
-  -
     ServerName: dev
     ServerAlias: dev.dev www.dev.dev
     DocumentRoot: /var/www
-    ServerAdmin: webmaster@localhost
-  -
-    ServerName: dev.controleatividade
-    DocumentRoot: /var/www/default/controle-atividade/public
     ServerAdmin: webmaster@localhost
