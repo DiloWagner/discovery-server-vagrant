@@ -1,0 +1,49 @@
+server {
+  listen 80;
+  server_name _;
+  root /var/www;
+  index index.php;
+
+  location / {
+    try_files $uri /index.php;
+  }
+
+  location ~ \.php$ {
+    fastcgi_pass 127.0.0.1:9000;
+    fastcgi_index index.php;
+    include fastcgi_params;
+  }
+}
+
+server {
+    listen       80;
+    server_name  vagrant.kommuni.com;
+
+    access_log off;
+    error_log /var/log/nginx/kommuni.error.log;
+
+    root /var/www/palestra-interativa/public;
+
+    index index.html index.htm index.php;
+
+    location / {
+         try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    location ~* \.(?:ico|css|js|gif|jpe?g|png)$ {
+        expires max;
+        add_header Pragma public;
+        add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+    }
+
+    location ~ \.(php|phtml)$ {
+         fastcgi_pass 127.0.0.1:9000;
+         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+         include fastcgi_params;
+    }
+
+    location ~ /\. {
+         deny all;
+    }
+
+}

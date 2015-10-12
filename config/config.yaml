@@ -4,17 +4,17 @@
 ### Only change these if you are experienced with VMs or are instructed to do so.
 ####################################
 vagrant:
-  box: DiscoveryServer-01
-  box_url: https://github.com/kraksoft/vagrant-box-ubuntu/releases/download/15.04/ubuntu-15.04-amd64.box
+  box: DiscoveryServer-02
+  box_url: https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box
   box_port: 8080
   box_port_ssl: 443
   box_ip: 192.168.1.100
   ssh_shell: bash -c 'BASH_ENV=/etc/profile exec bash'
   ssh_username: vagrant
   ssh_port: 22222
-  vm_name: discoveryserver-01
+  vm_name: discoveryserver-02
   vm_memory: 1024
-  vm_cpu: 1
+  vm_cpu: 80
   vm_webroot: /var/www
   vm_docroot: /var/www
   vm_hostname: dev
@@ -64,9 +64,6 @@ email:
 ###
 ### Some default modules for a well-rounded Apache and PHP setup. You may add others.
 ####################################
-apachemodules:
-  - rewrite
-  - ssl
 phpmodules:
   - php5-cli
   - php5-mysql
@@ -79,8 +76,7 @@ phpmodules:
   - php5-xmlrpc
   - php5-xdebug
   - php5-intl
-  - php5-xdebug
-  - libapache2-mod-php5
+  - php5-fpm
 
 ####################################
 ### Database
@@ -130,7 +126,7 @@ xdebug:
   - zend_extension = xdebug.so
   - xdebug.remote_enable = 1
   - xdebug.remote_host = localhost
-  - xdebug.remote_port = 9000
+  - xdebug.remote_port = 9001
   - xdebug.remote_connect_back = 1
   - xdebug.remote_handler = dbgp
   - xdebug.remote_mode = req
@@ -138,38 +134,3 @@ xdebug:
   - xdebug.profiler_enable = 0
   - xdebug.profiler_output_dir = /tmp
   - xdebug.profiler_output_name = cachegrind.out.%t.%p
-
-####################################
-### Directory Rules
-###
-### Some rules for Apache. You shouldn't need to change these unless you have problems with .htaccess files.
-####################################
-directory:
-  - Options Indexes FollowSymLinks MultiViews
-  - AllowOverride All
-  - Order allow,deny
-  - Allow from all
-
-####################################
-### Virtual Hosts
-###
-### Vhosts let you set up nicer URLs instead of using http://dev/foldername all the time.
-###
-### Be sure to mirror changes here in your computer's hosts file too!
-### Windows: C:\Windows\System32\Drivers\etc\hosts (Open your text editor as Administrator first (Right click and choose "Run as administrator"))
-### OSX: sudo nano /private/etc/hosts (From the terminal)
-###
-### Open the hosts file and make it look something like:
-### 127.0.0.1    localhost localhost.dev www.localhost.dev default default.dev www.default.dev
-### 127.0.0.1    dev dev.dev www.dev.dev
-### 127.0.0.1    anothersite anothersite.dev www.anothersite.dev
-###
-### Because localhost is mapped to an example default site, it's crucial you add dev to the hosts file (As demonstrated above) to access folders that don't have a vhost.
-### Also don't forget to run "vagrant provision" for any changes.
-####################################
-vhosts:
-  -
-    ServerName: dev
-    ServerAlias: dev.dev www.dev.dev
-    DocumentRoot: /var/www
-    ServerAdmin: webmaster@localhost

@@ -4,60 +4,8 @@
 require 'yaml'
 $vconfig = YAML::load_file("config/config.yaml")
 
-# Handle directory
-def getDirectory(directory, tabs)
-
-	if tabs == 2
-		tabs = "\t"
-	else
-		tabs = ""
-	end
-
-	rewrite = "\n\t"+tabs+"<Directory "+directory+">\n"
-	$vconfig['directory'].each_with_index do |val, key|
-		rewrite = rewrite + "\t\t"+ tabs + val + "\n"
-	end
-	rewrite = rewrite+"\t"+tabs+"</Directory>\n"
-	return rewrite
-end
-
-# Handle email
-email = ""
-$vconfig['email'].each do |k, v|
-	email = email+k+"="+v+"\n"
-end
-
-# Handle vhosts
-vhosts = ""
-$vconfig['vhosts'].each_with_index do |v, k|
-	vhosts = vhosts + "<VirtualHost *:80>\n" + getDirectory(v['DocumentRoot'],1) + "\n"
-	v.each_with_index do |val, key|
-		vhosts = vhosts + "\t" + val.join(' ') + "\n"
-	end
-	vhosts = vhosts + "\n</VirtualHost>\n\n"
-end
-
-# Handle vhostsssl
-vhostsssl = "<IfModule mod_ssl.c>\n\n"
-$vconfig['vhosts'].each_with_index do |v, k|
-	vhostsssl = vhostsssl + "\t<VirtualHost *:443>\n" + getDirectory(v['DocumentRoot'],2) + "\n"
-	v.each_with_index do |val, key|
-		vhostsssl = vhostsssl + "\t\t" + val.join(' ') + "\n"
-	end
-	vhostsssl = vhostsssl + "\n\t\tErrorLog ${APACHE_LOG_DIR}/error.log\n\t\tCustomLog ${APACHE_LOG_DIR}/access.log combined\n\n\t\tSSLEngine on\n\n\t\tSSLCertificateFile /etc/apache2/ssl/apache.crt\n\t\tSSLCertificateKeyFile /etc/apache2/ssl/apache.key\n\n\t\t<FilesMatch \"\.(cgi|shtml|phtml|php)$\">\n\t\t\tSSLOptions +StdEnvVars\n\t\t</FilesMatch>\n\n\t\t<Directory /usr/lib/cgi-bin>\n\t\t\tSSLOptions +StdEnvVars\n\t\t</Directory>\n\n\t</VirtualHost>\n\n"
-end
-vhostsssl = vhostsssl + "</IfModule>\n"
-
-# Openssl args
-opensslargs = ""
-$vconfig['ssl'].each do |k, v|
-	opensslargs = opensslargs+v+'\n'
-end
-
-####################################
-### Running Vagrant
-####################################
 Vagrant.configure("2") do |config|
+
 	config.vagrant.host = :detect
 	config.ssh.shell = $vconfig['vagrant']['ssh_shell']
 	config.ssh.username = $vconfig['vagrant']['ssh_username']
@@ -77,6 +25,8 @@ Vagrant.configure("2") do |config|
 	config.vm.network :forwarded_port, guest: 22, host: $vconfig['vagrant']['ssh_port'], id: "ssh"
 	config.vm.synced_folder $vconfig['vagrant']['vm_webroot'], $vconfig['vagrant']['vm_docroot'], :nfs => true
 	#config.vm.synced_folder $vconfig['vagrant']['vm_webroot'], $vconfig['vagrant']['vm_docroot'], :owner => "vagrant", :group => "www-data", :mount_options => ["dmode=777","fmode=777"]
+	#config.puppet_install.install_url = 'https://apt.puppetlabs.com/puppetlabs-release-trusty.deb'
+	#config.puppet_install.puppet_version = :latest
   
 	####################################
 	### VirtualBox Provider
@@ -102,32 +52,17 @@ Vagrant.configure("2") do |config|
 	####################################
 	config.vm.provision "puppet" do |puppet|
 		puppet.facter = {
-			"ssh_username" => $vconfig['vagrant']['ssh_username'],
-			"fqdn" => $vconfig['vagrant']['vm_hostname'],
-			"syspackages" => $vconfig['syspackages'].join(','),
-			"apachemodules" => $vconfig['apachemodules'].join(','),
 			"phpmodules" => $vconfig['phpmodules'].join(','),
-			"vhostsphp" => $vconfig['vhosts'].join(','),
-			"vhosts" => vhosts,
-			"vhostsssl" => vhostsssl,
-			"opensslargs" => opensslargs,
-			"email" => email,
-			"xdebug" => $vconfig['xdebug'].join("\n")+"\n",
-			"errors" => $vconfig['errors'].join("\n")+"\n",
-			"password" => $vconfig['mysql']['password'],
+			"fqdn" 	     => $vconfig['vagrant']['vm_hostname'],
+			"xdebug"     => $vconfig['xdebug'].join("\n")+"\n",
+			"password"   => $vconfig['mysql']['password']
 		}
+		puppet.manifests_path = 'puppet/manifests'
+		puppet.module_path = 'puppet/modules'
+		puppet.manifest_file = 'init.pp'
 		puppet.options = "--verbose"
-		puppet.manifests_path = "config/puppet/manifests"
-		puppet.manifest_file = "default.pp"
-		puppet.module_path = "config/puppet/modules"
 	end
 
-	####################################
-	### Run SQL
-	####################################
-	config.vm.provision "shell",
-    inline: "mysql -uroot -p"+$vconfig['mysql']['password']+" < '/etc/mysql/remote.sql'"
-	
 	####################################
 	### Ready
 	####################################
