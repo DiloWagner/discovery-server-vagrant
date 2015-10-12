@@ -1,28 +1,36 @@
-exec { 'apt-get update':
-  path => '/usr/bin',
+exec { 
+	'apt-get update':
+		path => '/usr/bin',
 }
 
 $modules = split($phpmodules,',')
 
-package { 'vim':
-  ensure => present,
+package { 
+	'vim':
+  		ensure => present,
 }
 
-file { '/var/www/':
-  ensure => 'directory',
+file { 
+	'/var/www/':
+		ensure => 'directory',
 }
-
-include nginx
 
 class
 {
-	'php':
-	modules => $modules,
-	xdebug  => $xdebug
+	'nginx':
 }
 
 class
 {
 	'mysql':
-	password => $password
+		password => $password,
+		require  => Class['nginx']
+}
+
+class
+{
+	'php':
+		modules => $modules,
+		xdebug  => $xdebug,
+		require => Class['mysql']
 }

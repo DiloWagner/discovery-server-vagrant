@@ -85,7 +85,7 @@ phpmodules:
 ####################################
 mysql:
   port: 6000
-  password: vagrant
+  password: ''
 
 ####################################
 ### SSL Certificate

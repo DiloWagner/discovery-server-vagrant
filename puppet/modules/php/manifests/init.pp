@@ -8,12 +8,23 @@ class php ($modules, $xdebug)
 		ensure  => latest
 	}
 	
-	#package 
-	#{ 
-	#	$modules:
-	#		ensure  => present,
-	#		require => Exec['apt-get update'],
-	#}
+	# Add some custom xdebug ini settings to override any in php.ini
+	file
+	{
+		'/etc/php5/mods-available/xdebug.ini':
+			ensure  => present,
+			require => Package["php5-xdebug"],
+			content => "${xdebug}"
+	}
+
+	file 
+	{ 
+		'fpm-www':
+			path    => '/etc/php5/fpm/pool.d/www.conf',
+			ensure  => present,
+			require => Package['php5-fpm'],
+			source  => 'puppet:///modules/php/www.conf',
+	}
 
 	# Install PHP Modules
 	define php::loadmodule ($modname = $title) {
@@ -30,16 +41,9 @@ class php ($modules, $xdebug)
 	service 
 	{ 
 		'php5-fpm':
-			ensure => running,
+			ensure  => running,
 			require => Package['php5-fpm'],
 	}
 
-	# Add some custom xdebug ini settings to override any in php.ini
-	file
-	{
-		'/etc/php5/mods-available/xdebug.ini':
-		ensure  => present,
-		require => Package["php"],
-		content => "${xdebug}"
-	}
+	
 }

@@ -64,8 +64,26 @@ Vagrant.configure("2") do |config|
 	end
 
 	####################################
+	### Restart NGINX
+	####################################
+	config.vm.provision "shell",
+    	inline: "sudo service nginx restart"
+
+	####################################
+	### Restart php-fpm
+	####################################
+	config.vm.provision "shell",
+    	inline: "sudo service php5-fpm restart"
+
+	####################################
+	### Run SQL
+	####################################
+	config.vm.provision "shell",
+	inline: "mysql -uroot < '/etc/mysql/remote.sql'"
+
+	####################################
 	### Ready
 	####################################
 	config.vm.provision "shell",
-    inline: "cat /vagrant/config/shell/ready.txt"
+    	inline: "cat /vagrant/config/shell/ready.txt"
 end
