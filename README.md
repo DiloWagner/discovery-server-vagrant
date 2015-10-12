@@ -12,6 +12,9 @@ Exemplo criado com base no projeto [cptserver](https://github.com/pigeontech/cpt
 
 #### Requisitos
 ------------
+É necessário que esteja instalado:
 * [Vagrant 1.7.4](http://www.vagrantup.com/)
 * [Plugin vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest)
 * [Virtual Box 5.0.4](https://www.virtualbox.org/wiki/Downloads)
+
+Todas as configurações estão contidas no arquivo [config.yaml](https://github.com/DiloWagner/discovery-server-vagrant/blob/master/config/config.yaml)
