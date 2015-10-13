@@ -1,6 +1,5 @@
 discovery-server-vagrant
 =========
-Server NGINX - MySQL - PHP
 Um projeto desenvolvido para estudos relacionados ao Vagrant, Virtual Box e Puppet.
 
 Exemplo criado com base no projeto [cptserver](https://github.com/pigeontech/cptserver).
@@ -10,6 +9,7 @@ Exemplo criado com base no projeto [cptserver](https://github.com/pigeontech/cpt
 * [pigeontech](https://github.com/pigeontech)
 * [tutorial de instalação do autor](https://www.youtube.com/watch?v=TEAZnpM8RuA)
 
+Lamp stack com NGINX, MySQL, PHP
 #### Requisitos
 ------------
 É necessário que esteja instalado:
